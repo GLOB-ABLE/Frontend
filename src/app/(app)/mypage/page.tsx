@@ -2,7 +2,7 @@ import { MypageClient } from "@/components/mypage/mypage-client";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
-  title: "마이페이지 — I-OGO",
+  title: "마이페이지 — Globable",
 };
 
 export default async function MyPage() {

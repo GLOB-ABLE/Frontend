@@ -11,8 +11,7 @@ export const shellStrings = {
   navInsight: "인사이트",
   navNotif: "알림",
   navMypage: "마이페이지",
-  navLogin: "로그인",
-  navSignup: "회원가입",
+  navLogin: "시작하기",
   // aria
   notifAria: "알림",
   mypageAria: "마이페이지",

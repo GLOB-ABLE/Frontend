@@ -1,8 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -18,10 +17,8 @@ import { createClient } from "@/lib/supabase/client";
 import { signInWithProvider, type OAuthProvider } from "@/lib/supabase/oauth";
 import { loginSchema, type LoginValues } from "@/lib/validations/auth";
 
-function LoginPageContent() {
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/";
 
   const {
     register,
@@ -35,7 +32,7 @@ function LoginPageContent() {
   });
 
   const onSocial = async (provider: OAuthProvider) => {
-    const error = await signInWithProvider(provider, next);
+    const error = await signInWithProvider(provider, "/");
     if (error) {
       setError("root", {
         message: "소셜 로그인에 실패했어요. 잠시 후 다시 시도해 주세요.",
@@ -57,7 +54,7 @@ function LoginPageContent() {
       return;
     }
 
-    router.push(next);
+    router.push("/");
   };
 
   return (
@@ -72,7 +69,7 @@ function LoginPageContent() {
             </div>
             <div className="text-center">
               <h1 className="text-foreground text-[22px] font-extrabold tracking-[-0.4px]">
-                I-OGO에 오신 걸 환영합니다.
+                Globable에 오신 걸 환영합니다.
               </h1>
               <p className="text-muted-foreground mt-[5px] text-[13px]">
                 로그인하면 적합도·저장·맞춤 조언이 켜집니다.
@@ -116,95 +113,9 @@ function LoginPageContent() {
                 {errors.root.message}
               </span>
             )}
-
-            {/* 구분선 */}
-            <div className="my-1.5 flex items-center gap-2.5">
-              <div className="bg-border h-px flex-1" />
-              <span className="text-muted-foreground/80 text-[11px] font-semibold">
-                또는 이메일로
-              </span>
-              <div className="bg-border h-px flex-1" />
-            </div>
-
-            {/* 이메일 */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="sr-only">
-                이메일
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="이메일"
-                autoComplete="email"
-                aria-invalid={!!errors.email}
-                {...register("email")}
-              />
-              {errors.email && (
-                <span className="text-destructive text-xs" role="alert">
-                  {errors.email.message}
-                </span>
-              )}
-            </div>
-
-            {/* 비밀번호 */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="password" className="sr-only">
-                비밀번호
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="비밀번호"
-                autoComplete="current-password"
-                aria-invalid={!!errors.password}
-                {...register("password")}
-              />
-              {errors.password && (
-                <span className="text-destructive text-xs" role="alert">
-                  {errors.password.message}
-                </span>
-              )}
-            </div>
-
-            {/* 로그인 CTA */}
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-0.5 h-auto w-full gap-2 rounded-[11px] p-[13px] font-extrabold hover:bg-[#117DFF] disabled:cursor-not-allowed disabled:bg-[#AEB6C7] disabled:opacity-100"
-            >
-              {isSubmitting && (
-                <span className="size-[15px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
-              )}
-              {isSubmitting ? "로그인 중…" : "로그인"}
-            </Button>
           </form>
-
-          {/* 둘러보기 / 회원가입 */}
-          <div className="mt-[18px] flex flex-col items-center gap-3">
-            <p className="text-muted-foreground/80 text-[13px]">
-              계정이 없으세요?{" "}
-              <Link
-                href={
-                  next !== "/"
-                    ? `/signup?next=${encodeURIComponent(next)}`
-                    : "/signup"
-                }
-                className="text-point-hover font-extrabold"
-              >
-                회원가입
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginPageContent />
-    </Suspense>
   );
 }

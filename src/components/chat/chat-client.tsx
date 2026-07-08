@@ -4,7 +4,8 @@ import { ArrowRight, ArrowUp, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { sendChat, sendChatStream, type ChatResponse } from "@/lib/api/iogo";
+import { ConnBadge, type ConnState } from "@/components/common/conn-badge";
+import { sendChat, type ChatResponse } from "@/lib/api/iogo";
 import { getUserId } from "@/lib/api/user";
 
 type Msg = {
@@ -14,18 +15,17 @@ type Msg = {
 };
 
 const copy = {
-  botName: "I-OGO 취준봇",
+  botName: "Globable 취준봇",
   botTag: "실시간 공공데이터",
   sub: "국제기구 공고 탐색부터 지원 준비까지 도와드려요.",
   aiBadge: "AI 생성",
-  emptyTitle: "안녕하세요, I-OGO 취준봇이에요.",
+  emptyTitle: "안녕하세요, Globable 취준봇이에요.",
   emptyDesc:
     "전공·언어·스킬에 맞는 국제기구 공고를 찾아 적합도와 함께 정리해 드려요. 아래에서 골라보거나 편하게 물어보세요.",
   suggestLabel: "이렇게 물어보세요",
   placeholder: "예: 내 스펙으로 지원 가능한 데이터 공고 찾아줘",
+  inputHint: "외교부 공공데이터 기반 · 매일 09:00 KST 갱신",
   sourcesLabel: "참고한 자료",
-  inputHint:
-    "AI가 생성한 답변은 부정확할 수 있어요. 중요한 정보는 원문 공고를 확인하세요.",
 } as const;
 
 const SUGGESTIONS = [
@@ -38,6 +38,8 @@ const SUGGESTIONS = [
 const AVATAR_GRADIENT = "linear-gradient(135deg, var(--point), var(--primary))";
 
 export function ChatClient({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
+  const [state, setState] = useState<ConnState>("loading");
+  const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | undefined>();
   const [input, setInput] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([]);
@@ -48,6 +50,7 @@ export function ChatClient({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   useEffect(() => {
     getUserId().then((id) => {
       userIdRef.current = id;
+      setState("ok"); // 실제 연결 여부는 첫 전송에서 확정
     });
   }, []);
 
@@ -61,49 +64,22 @@ export function ChatClient({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
     setInput("");
     setMsgs((m) => [...m, { role: "user", text }]);
     setPending(true);
-
-    // 스트리밍용 빈 봇 말풍선을 먼저 추가 (토큰 도착마다 채워진다)
-    setMsgs((m) => [...m, { role: "bot", text: "" }]);
-
-    const patchLastBot = (patch: (last: Msg) => Msg) => {
-      setMsgs((m) => {
-        const next = [...m];
-        const last = next[next.length - 1];
-        if (last?.role === "bot") {
-          next[next.length - 1] = patch(last);
-        }
-        return next;
-      });
-    };
-
-    const fallbackToNonStreaming = async () => {
-      // 스트리밍 실패 시 기존 논스트리밍으로 재시도
-      try {
-        const res = await sendChat(text, userIdRef.current, sessionId);
-        patchLastBot(() => ({
-          role: "bot",
-          text: res.reply,
-          sources: res.sources,
-        }));
-        setSessionId(res.session_id);
-      } catch {
-        patchLastBot(() => ({ role: "bot", text: "(연결 실패)" }));
-      } finally {
-        setPending(false);
-      }
-    };
-
-    await sendChatStream(text, userIdRef.current, sessionId, {
-      onDelta: (delta) => {
-        patchLastBot((last) => ({ ...last, text: last.text + delta }));
-      },
-      onDone: ({ session_id, sources }) => {
-        setSessionId(session_id);
-        patchLastBot((last) => ({ ...last, sources }));
-        setPending(false);
-      },
-      onError: () => void fallbackToNonStreaming(),
-    });
+    try {
+      const res = await sendChat(text, userIdRef.current, sessionId);
+      setSessionId(res.session_id);
+      setMsgs((m) => [
+        ...m,
+        { role: "bot", text: res.reply, sources: res.sources },
+      ]);
+      setState("ok");
+      setError(null);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
+      setState("error");
+      setMsgs((m) => [...m, { role: "bot", text: "(연결 실패)" }]);
+    } finally {
+      setPending(false);
+    }
   };
 
   const isEmpty = msgs.length === 0;
@@ -130,6 +106,9 @@ export function ChatClient({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             </span>
           </div>
           <p className="text-muted-foreground mt-0.5 text-[13px]">{copy.sub}</p>
+        </div>
+        <div className="ml-auto hidden sm:block">
+          <ConnBadge state={state} error={error} />
         </div>
       </div>
 
@@ -166,15 +145,9 @@ export function ChatClient({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 <div className="relative mt-4 flex flex-wrap items-center justify-center gap-2.5">
                   <Link
                     href="/login"
-                    className="bg-point hover:bg-point-hover rounded-[10px] px-5 py-2.5 text-[13px] font-extrabold text-white transition-colors"
-                  >
-                    로그인
-                  </Link>
-                  <Link
-                    href="/signup"
                     className="rounded-[10px] border-[1.5px] border-white/30 px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:border-white"
                   >
-                    회원가입
+                    시작하기
                   </Link>
                 </div>
               </div>

@@ -112,12 +112,6 @@ export function Sidebar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 label={t.navLogin}
                 collapsed={collapsed}
               />
-              <NavLink
-                href="/signup"
-                icon={UserPlus}
-                label={t.navSignup}
-                collapsed={collapsed}
-              />
             </>
           )}
         </div>

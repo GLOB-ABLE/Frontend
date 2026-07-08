@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import { BrandMark } from "@/components/layout/brand-mark";
 import { shellStrings as t } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
+import { Bubbles } from "lucide-react";
 
 export async function AppHeader({ hasUnread = true }: { hasUnread?: boolean }) {
   const supabase = await createClient();
@@ -19,10 +19,12 @@ export async function AppHeader({ hasUnread = true }: { hasUnread?: boolean }) {
         href="/"
         className="focus-visible:ring-point flex items-center gap-2.5 rounded-md outline-none focus-visible:ring-2"
       >
-        <BrandMark />
+        <span className="bg-point rounded-md p-1.5">
+          <Bubbles color="white" />
+        </span>
         <span className="flex flex-col leading-[1.05]">
           <span className="text-[17px] font-extrabold tracking-tight">
-            I-OGO
+            Globable
           </span>
           <span className="text-muted-foreground text-[10px] font-medium">
             {t.tagline}
@@ -75,15 +77,9 @@ export async function AppHeader({ hasUnread = true }: { hasUnread?: boolean }) {
           <div className="flex items-center gap-1 text-[13px] font-semibold">
             <Link
               href="/login"
-              className="focus-visible:ring-point text-secondary-foreground hover:bg-secondary rounded-md px-2.5 py-1.5 transition-colors outline-none focus-visible:ring-2"
+              className="focus-visible:ring-point hover:bg-point-hover rounded-md bg-[#117DFF] px-2.5 py-1.5 text-white transition-colors outline-none focus-visible:ring-2"
             >
-              로그인
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-point focus-visible:ring-point hover:bg-point-hover rounded-md px-2.5 py-1.5 text-white transition-colors outline-none focus-visible:ring-2"
-            >
-              회원가입
+              시작하기
             </Link>
           </div>
         )}
