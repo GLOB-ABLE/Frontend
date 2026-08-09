@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * ⚠️ 지금은 어느 화면에서도 쓰지 않습니다 (docs/user-flow.md 5장).
+ *
+ * 옛 국제기구 프로젝트(I-OGO)의 홈입니다. 카피가 전부 "국제기구 진출"이고
+ * 마스코트 "나랑이"가 나와서 유학생 취업 서비스와 맞지 않습니다.
+ * 첫 방문자 화면은 /intro/student가 대신합니다.
+ *
+ * 참고용으로 남겨둔 파일입니다. 다시 쓰려면 카피부터 새로 써야 합니다.
+ */
+
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -41,7 +51,7 @@ type Hub = {
 // Exact data mapping & color specs per SVG 998x320 vector source
 const HUBS: Hub[] = [
   {
-    href: "/compass",
+    href: "/self-check",
     label: "나침반",
     badgeText: "STEP 1",
     fullTitle: "나침반 (적성/진로 테스트)",

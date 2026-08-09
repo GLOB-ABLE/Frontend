@@ -61,14 +61,14 @@ export function InsightClient() {
             {recs && !recs.has_compass && (
               <div className="border-border bg-card mb-3 flex flex-wrap items-center justify-between gap-2 rounded-[14px] border p-4">
                 <p className="text-muted-foreground text-[13px]">
-                  나침반 검사를 완료하면 관심사 기반으로 더 정확히 추천해
-                  드려요.
+                  내 조건 진단을 마치면 관심사 기반으로 더 정확히 추천해 드려요.
                 </p>
+                {/* 나침반(/compass)은 내 조건 진단(/self-check)으로 대체됐다 */}
                 <Link
-                  href="/compass"
+                  href="/self-check"
                   className="bg-primary hover:bg-point-hover shrink-0 rounded-[10px] px-3 py-2 text-xs font-bold text-white transition-colors"
                 >
-                  나침반 검사 하기
+                  내 조건 진단하기
                 </Link>
               </div>
             )}

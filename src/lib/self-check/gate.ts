@@ -18,7 +18,7 @@ import type {
 const EXPIRY_WARNING_DAYS = 90;
 
 const ALL_FEATURES = {
-  compass: "내 조건 진단",
+  selfCheck: "내 조건 진단",
   profile: "프로필·증빙 정리",
   browse: "맞춤 공고 보기",
   apply: "공고 지원",
@@ -67,7 +67,7 @@ export function evaluateGate(
         !academicStatus ? "학적 상태를 고르지 않았습니다." : null,
         !visaExpiresOn ? "체류 만료일을 적지 않았습니다." : null,
       ].filter((r): r is string => r !== null),
-      allowed: [ALL_FEATURES.compass, ALL_FEATURES.residence],
+      allowed: [ALL_FEATURES.selfCheck, ALL_FEATURES.residence],
       blocked: [ALL_FEATURES.browse, ALL_FEATURES.apply],
       canBrowseJobs: false,
       canApply: false,
@@ -93,7 +93,7 @@ export function evaluateGate(
           : `만료까지 ${EXPIRY_WARNING_DAYS}일이 남지 않아 지원 기능을 열지 않습니다.`,
       ],
       allowed: [
-        ALL_FEATURES.compass,
+        ALL_FEATURES.selfCheck,
         ALL_FEATURES.residence,
         ALL_FEATURES.program,
       ],
@@ -135,7 +135,7 @@ export function evaluateGate(
         "자격이 없는 상태에서는 공고를 추천하지 않습니다.",
       ],
       allowed: [
-        ALL_FEATURES.compass,
+        ALL_FEATURES.selfCheck,
         ALL_FEATURES.profile,
         ALL_FEATURES.mission,
         ALL_FEATURES.residence,
@@ -162,7 +162,7 @@ export function evaluateGate(
         "D-10으로 바꾸면 지원 기능이 열립니다.",
       ],
       allowed: [
-        ALL_FEATURES.compass,
+        ALL_FEATURES.selfCheck,
         ALL_FEATURES.profile,
         ALL_FEATURES.browse,
         ALL_FEATURES.mission,
@@ -184,7 +184,7 @@ export function evaluateGate(
       "고르신 체류자격으로는 취업활동 가능 여부를 판단할 수 없습니다.",
       "전문가 검토로 넘기면 정확히 확인할 수 있습니다.",
     ],
-    allowed: [ALL_FEATURES.compass, ALL_FEATURES.residence],
+    allowed: [ALL_FEATURES.selfCheck, ALL_FEATURES.residence],
     blocked: [ALL_FEATURES.browse, ALL_FEATURES.apply],
     canBrowseJobs: false,
     canApply: false,

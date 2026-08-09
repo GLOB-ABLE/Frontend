@@ -224,6 +224,25 @@
     transform: rotate(360deg);
   }
 }
+/* 모달이 뜰 때 살짝 커지며 나타난다 */
+@keyframes pol-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes pol-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 @keyframes pol-ping {
   0% {
     transform: scale(1);

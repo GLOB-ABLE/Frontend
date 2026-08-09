@@ -99,7 +99,7 @@ const DETAILS: Record<string, Omit<JobPostingDetail, keyof JobPosting>> = {
           "성적표 파일이 올라오지 않았습니다.",
           "증빙이 없어 충족으로 바꾸지 않습니다.",
         ],
-        action: { label: "성적표 올리기", href: "/profile" },
+        action: { label: "성적표 올리기", href: "/mypage?tab=documents" },
         evidence: [
           { label: "증빙 없음", tone: "warn" },
           { label: RULE_VERSION, tone: "meta" },
@@ -277,7 +277,7 @@ const DETAILS: Record<string, Omit<JobPostingDetail, keyof JobPosting>> = {
           "성적표 파일이 올라오지 않았습니다.",
           "증빙이 없어 충족으로 바꾸지 않습니다.",
         ],
-        action: { label: "성적표 올리기", href: "/profile" },
+        action: { label: "성적표 올리기", href: "/mypage?tab=documents" },
         evidence: [
           { label: "증빙 없음", tone: "warn" },
           { label: RULE_VERSION, tone: "meta" },
@@ -390,7 +390,7 @@ const DETAILS: Record<string, Omit<JobPostingDetail, keyof JobPosting>> = {
           "인턴 확인서에는 이 업무가 적혀 있지 않습니다.",
           "증빙이 없어 충족으로 바꾸지 않습니다.",
         ],
-        action: { label: "경력 증빙 올리기", href: "/profile" },
+        action: { label: "경력 증빙 올리기", href: "/mypage?tab=documents" },
         evidence: [
           { label: "증빙 없음", tone: "warn" },
           { label: RULE_VERSION, tone: "meta" },

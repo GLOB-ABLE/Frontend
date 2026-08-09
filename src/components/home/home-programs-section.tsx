@@ -23,7 +23,7 @@ export function HomeProgramsSection({ programs }: { programs: Program[] }) {
             id="home-programs-heading"
             className="text-ds-navy text-xl font-extrabold tracking-[-0.5px]"
           >
-            지금 필요한 취업지원 프로그램
+            지금 필요한 역량강화 프로그램
           </h2>
           <p className="text-ds-muted mt-1.5 text-[13px]">
             위에서 남은 요건을 채우는 것만 골랐어요

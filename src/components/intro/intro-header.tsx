@@ -64,20 +64,24 @@ export function IntroHeader() {
           })}
         </nav>
 
-        {/* TODO: 로그인 연결 대상이 정해지면 href를 채운다 */}
+        {/*
+          시작하기는 /login으로 보낸다. 로그인 화면에 "테스트 계정으로 로그인하기"가
+          있어서 가입 없이 바로 들어올 수 있다 (docs/user-flow.md 5장).
+          진단은 히어로의 "내 조건 진단하기"가 맡는다.
+        */}
         <div className="ml-auto flex items-center gap-2">
           <Link
-            href="/jobs"
+            href="/"
             className="text-ds-muted hover:text-ds-primary hidden text-[13.5px] font-semibold transition-colors sm:block"
           >
             서비스 둘러보기
           </Link>
-          <button
-            type="button"
-            className="bg-ds-primary hover:bg-ds-navy cursor-pointer rounded-lg px-4 py-2 text-[13.5px] font-bold text-white transition-colors"
+          <Link
+            href="/login"
+            className="bg-ds-primary hover:bg-ds-navy rounded-lg px-4 py-2 text-[13.5px] font-bold text-white transition-colors"
           >
             시작하기
-          </button>
+          </Link>
         </div>
       </div>
     </header>
