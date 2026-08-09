@@ -9,8 +9,11 @@ export async function AppHeader({ hasUnread = true }: { hasUnread?: boolean }) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const name = ((user?.user_metadata?.name as string | undefined) ?? "").trim();
-  const initial = name.charAt(0).toUpperCase();
+  const rawName = (
+    (user?.user_metadata?.name as string | undefined) ?? ""
+  ).trim();
+  const name = rawName || "사용자";
+  const initial = rawName ? rawName.charAt(0).toUpperCase() : "U";
 
   return (
     <header className="border-border text-foreground flex h-15 shrink-0 items-center justify-between border-b bg-white px-3.5 sm:px-5">
