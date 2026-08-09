@@ -96,7 +96,7 @@ function GrowthCard({ item }: { item: GrowthItem }) {
 
       <p
         className={cn(
-          "border-ds-divider mt-auto flex items-center gap-1.5 border-t pt-4 text-[13.5px] font-bold",
+          "border-ds-divider mt-2 flex items-center gap-1.5 border-t pt-4 text-[13.5px] font-bold",
           ready ? "text-ds-primary" : "text-ds-label",
         )}
       >

@@ -10,7 +10,7 @@
  * 참고용으로 남겨둔 파일입니다. 다시 쓰려면 카피부터 새로 써야 합니다.
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
@@ -19,8 +19,6 @@ import {
   Compass,
   MessageCircle,
   Newspaper,
-  ChevronLeft,
-  ChevronRight,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -144,39 +142,11 @@ export function MapHub() {
   const router = useRouter();
 
   // Embla Carousel hook for smooth mobile card sliding
-  const [emblaRef, emblaApi] = useEmblaCarousel({
+  const [emblaRef, _emblaApi] = useEmblaCarousel({
     loop: false,
     align: "center",
     containScroll: false,
   });
-  const [activeStep, setActiveStep] = useState(0);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const scrollTo = useCallback(
-    (index: number) => {
-      if (emblaApi) emblaApi.scrollTo(index);
-    },
-    [emblaApi],
-  );
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    const onSelect = () => {
-      setActiveStep(emblaApi.selectedScrollSnap());
-    };
-    emblaApi.on("select", onSelect);
-    onSelect();
-    return () => {
-      emblaApi.off("select", onSelect);
-    };
-  }, [emblaApi]);
 
   // Prefetch pages for instant transitions
   useEffect(() => {

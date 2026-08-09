@@ -31,6 +31,7 @@ export function InsightCard({
       )}
 
       <div className="bg-muted relative aspect-[16/9] w-full shrink-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={a.thumbnail_url || "/insight_default_earth.jpg"}
           alt={a.title}

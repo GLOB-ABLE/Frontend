@@ -16,17 +16,17 @@ import type {
   JobPostingDetail,
   RequirementRow,
 } from "@/lib/feed/types";
-import { PROGRAMS } from "@/lib/programs/mock";
-import type { Program } from "@/lib/programs/types";
+import { LEARNER, PROGRAMS } from "@/lib/programs/mock";
+import type { ProgramItem } from "@/lib/programs/types";
 
 /** 홈에 올리는 개수 — 나머지는 목록 화면에서 본다 */
 export const HOME_JOB_LIMIT = 3;
 export const HOME_PROGRAM_LIMIT = 3;
 
-/** 지금 로그인한 사용자 (목 데이터) */
+/** 지금 로그인한 사용자 — 프로그램 목데이터의 페르소나를 그대로 쓴다 */
 export const HOME_USER = {
-  name: "호앙 안",
-  status: "D-10 · 구직 준비",
+  name: LEARNER.name,
+  status: `${LEARNER.visa} · ${LEARNER.region} · ${LEARNER.graduation}`,
 } as const;
 
 /**
@@ -90,15 +90,15 @@ export function getHomeJobStrategies(): HomeJobStrategy[] {
 
 /**
  * 홈에 올릴 프로그램.
- * 요건을 해결하는 프로그램이 먼저 온다. 추천도 %는 만들지 않는다.
+ *
+ * 목록은 이미 추천 순서로 정렬돼 있다 (lib/programs/mock.ts).
+ * 홈에서는 바로 신청할 수 있는 것만 올린다 — 확인이 필요한 것까지 첫 화면에
+ * 올리면 무엇부터 해야 할지 흐려진다. 나머지는 목록 화면에서 본다.
  */
-export function getHomePrograms(): Program[] {
-  return [...PROGRAMS]
-    .sort((a, b) => {
-      if (a.featured !== b.featured) return a.featured ? -1 : 1;
-      return b.targets.length - a.targets.length;
-    })
-    .slice(0, HOME_PROGRAM_LIMIT);
+export function getHomePrograms(): ProgramItem[] {
+  const ready = PROGRAMS.filter((item) => item.eligibility === "met");
+  const list = ready.length >= HOME_PROGRAM_LIMIT ? ready : PROGRAMS;
+  return list.slice(0, HOME_PROGRAM_LIMIT);
 }
 
 /** 홈에 올린 공고들에 남아 있는 요건 개수 — 인사 문구에 쓴다 */

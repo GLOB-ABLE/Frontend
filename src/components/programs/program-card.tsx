@@ -1,174 +1,180 @@
-"use client";
-
 /**
- * 추천 프로그램 카드
+ * 프로그램 카드
  *
- * 시안의 "매칭도 96%" + 진행 바 자리를 요건 표현으로 바꿨다.
- * 어떤 요건이 어떤 상태에서 충족으로 바뀌는지를 보여준다 (PR-2).
+ * 추천 점수를 쓰지 않는다. 신청 자격을 4상태로 말하고, 근거를 함께 적는다
+ * (PR-1 · PR-2 · 디자인 시스템 2장 금지 패턴 1).
+ *
+ * 상세 페이지가 아직 없어서 링크를 걸지 않는다. 카드 안에서 다 보여준다.
  */
+
+import { CalendarDays, MapPin } from "lucide-react";
 
 import { StatusBadge } from "@/components/ds/status-badge";
 import {
+  CATEGORY_LABEL,
+  deadlineLabel,
+  ELIGIBILITY_HEADLINE,
+  feeLabel,
+  formatPeriod,
   isFree,
-  targetLabel,
-  type Program,
-  type ProgramCost,
-  type ProgramIntake,
+  type ProgramItem,
 } from "@/lib/programs/types";
 import { cn } from "@/lib/utils";
 
-export function ProgramCard({ program }: { program: Program }) {
+export function ProgramCard({ item }: { item: ProgramItem }) {
+  const unmet = item.eligibility === "unmet";
+
   return (
     <article
       className={cn(
-        "bg-ds-surface rounded-2xl border p-5 transition-colors sm:p-[22px]",
-        program.featured
-          ? "border-ds-line-strong hover:border-ds-primary shadow-[0_2px_10px_rgba(31,58,143,0.06)]"
-          : "border-ds-line hover:border-ds-line-strong",
+        "bg-ds-surface flex h-full flex-col rounded-2xl border p-5 transition-colors sm:p-[22px]",
+        unmet
+          ? "border-ds-line opacity-90"
+          : item.eligibility === "check"
+            ? "border-check-border"
+            : "border-ds-line hover:border-ds-line-strong",
       )}
     >
-      <div className="flex flex-col gap-5 lg:flex-row">
-        <div className="flex min-w-0 flex-1 gap-4 sm:gap-5">
-          <span
-            aria-hidden
-            className={cn(
-              "flex size-16 shrink-0 items-center justify-center rounded-2xl text-[13px] font-extrabold text-white",
-              program.logoTone === "navy" ? "bg-ds-navy" : "bg-ds-sub",
-            )}
-          >
-            {program.logoText}
-          </span>
-
-          <div className="min-w-0 flex-1">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              {program.featured && (
-                <span className="bg-ds-primary rounded-md px-2.5 py-1 text-[11.5px] font-bold text-white">
-                  가장 추천
-                </span>
-              )}
-              <CostBadge cost={program.cost} />
-              <IntakeBadge intake={program.intake} />
-            </div>
-
-            <h3 className="text-ds-ink text-lg font-extrabold tracking-[-0.3px]">
-              {program.title}
-            </h3>
-            <p className="text-ds-body mt-1 text-[13.5px] font-semibold">
-              {program.provider}
-            </p>
-            <p className="text-ds-muted mt-2.5 text-[13px]">
-              {program.formatLabel}
-            </p>
-            <p className="text-ds-ink mt-2.5 text-[13.5px] leading-relaxed">
-              {program.reason}
-            </p>
-          </div>
-        </div>
-
-        {/* 매칭도 % 자리 — 해결되는 요건을 개수와 상태로 적는다 */}
-        <div className="border-ds-divider flex shrink-0 flex-col justify-between gap-4 border-t pt-4 lg:w-[220px] lg:border-t-0 lg:pt-0">
-          <div>
-            <p className="text-ds-muted text-xs font-semibold lg:text-right">
-              끝내면 바뀌는 것
-            </p>
-
-            {program.targets.length > 0 ? (
-              <>
-                <ul className="mt-2.5 flex flex-col gap-2">
-                  {program.targets.map((target) => (
-                    <li
-                      key={target.requirementId}
-                      className="flex flex-wrap items-center gap-1.5 lg:justify-end"
-                    >
-                      <span className="text-ds-ink text-[13px] font-bold">
-                        {target.label}
-                      </span>
-                      <StatusBadge status={target.currentStatus} size="sm" />
-                      <span aria-hidden className="text-ds-label text-xs">
-                        →
-                      </span>
-                      <StatusBadge status="met" size="sm" />
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-ds-muted mt-2.5 text-xs lg:text-right">
-                  {targetLabel(program)} 해결
-                </p>
-              </>
-            ) : (
-              <p className="text-ds-body mt-2.5 text-[13px] lg:text-right">
-                {program.supportNote}
-              </p>
-            )}
-          </div>
-
-          <a
-            href={program.href ?? "#"}
-            className={cn(
-              "block rounded-[11px] py-3 text-center text-sm font-bold transition-colors",
-              program.featured
-                ? "bg-ds-primary hover:bg-ds-navy text-white shadow-[0_4px_14px_rgba(31,119,255,0.26)]"
-                : "border-ds-line-strong text-ds-primary hover:bg-ds-tint border",
-            )}
-          >
-            신청하기
-          </a>
-        </div>
+      {/* 분류 · 마감 · 비용 */}
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        <span className="bg-ds-tint text-ds-navy rounded-md px-2.5 py-1 text-[11.5px] font-bold">
+          {CATEGORY_LABEL[item.category]}
+        </span>
+        <DeadlineBadge item={item} />
+        <span
+          className={cn(
+            "rounded-md px-2.5 py-1 text-[11.5px] font-bold",
+            isFree(item)
+              ? "bg-met-bg text-met-text"
+              : "text-ds-muted bg-[#F1F5F9]",
+          )}
+        >
+          {feeLabel(item)}
+        </span>
       </div>
+
+      <h3 className="text-ds-ink text-[16px] font-extrabold tracking-[-0.2px]">
+        {item.title}
+      </h3>
+      <p className="text-ds-body mt-1 text-[13px] font-semibold">
+        {item.provider}
+      </p>
+      <p className="text-ds-muted mt-2 text-[13px] leading-relaxed">
+        {item.summary}
+      </p>
+
+      {/* 기간 · 지역 */}
+      <ul className="text-ds-muted mt-3 flex flex-col gap-1.5 text-[12.5px]">
+        <li className="flex items-center gap-1.5">
+          <CalendarDays className="size-3.5 shrink-0" aria-hidden />
+          신청 {formatPeriod(item.applicationPeriod)}
+        </li>
+        {item.activePeriod && (
+          <li className="flex items-center gap-1.5">
+            <span aria-hidden className="w-3.5 shrink-0" />
+            {item.activePeriodLabel} {formatPeriod(item.activePeriod)}
+          </li>
+        )}
+        {item.region && (
+          <li className="flex items-center gap-1.5">
+            <MapPin className="size-3.5 shrink-0" aria-hidden />
+            {item.region}
+          </li>
+        )}
+      </ul>
+
+      {/* 얻는 것 */}
+      {item.highlights.length > 0 && (
+        <>
+          <p className="text-ds-muted mt-4 text-xs font-semibold">
+            {item.highlightsLabel}
+          </p>
+          <ul className="mt-2 flex flex-wrap gap-1.5">
+            {item.highlights.map((skill) => (
+              <li
+                key={skill}
+                className="border-ds-line text-ds-body rounded-[7px] border bg-[#F7FBFF] px-2.5 py-1.5 text-[12px] font-semibold"
+              >
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {/* 추천 이유 — 사실만 적는다 */}
+      <p className="text-ds-ink mt-3.5 text-[13px] leading-relaxed">
+        {item.reason}
+      </p>
+
+      {/* 신청 자격 판정 + 근거 */}
+      <div
+        className={cn(
+          "mt-auto rounded-[13px] border p-3.5",
+          item.eligibility === "met"
+            ? "border-met-border bg-met-surface"
+            : item.eligibility === "check"
+              ? "border-check-border bg-check-surface"
+              : "border-unmet-border bg-unmet-surface",
+        )}
+      >
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusBadge status={item.eligibility} size="sm" />
+          <p className="text-ds-ink text-[13.5px] font-bold">
+            {ELIGIBILITY_HEADLINE[item.eligibility]}
+          </p>
+        </div>
+        <p className="text-ds-body mt-1.5 text-[12.5px] leading-relaxed">
+          {item.verificationNote}
+        </p>
+
+        {item.requirements.length > 0 && (
+          <ul className="mt-2.5 flex flex-col gap-1">
+            {item.requirements.map((req) => (
+              <li
+                key={req}
+                className="text-ds-muted flex gap-2 text-[12.5px] leading-relaxed"
+              >
+                <span aria-hidden className="text-ds-label">
+                  ·
+                </span>
+                {req}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* 부가 정보 */}
+      {item.facts.length > 0 && (
+        <dl className="border-ds-divider text-ds-muted mt-3.5 flex flex-wrap gap-x-4 gap-y-1 border-t pt-3 text-[12px]">
+          {item.facts.map((fact) => (
+            <div key={fact.label} className="flex gap-1.5">
+              <dt className="text-ds-label">{fact.label}</dt>
+              <dd className="font-semibold">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
     </article>
   );
 }
 
-function CostBadge({ cost }: { cost: ProgramCost }) {
-  if (cost.kind === "paid") {
-    return (
-      <span className="text-ds-muted rounded-md bg-[#F1F5F9] px-2.5 py-1 text-[11.5px] font-bold">
-        {cost.label}
-      </span>
-    );
-  }
+function DeadlineBadge({ item }: { item: ProgramItem }) {
+  const label = deadlineLabel(item);
+  // 마감이 가까우면 눈에 띄게. 판정 색이 아니라 일정 안내용이다.
+  const urgent = label.startsWith("D-") || label === "오늘 마감";
 
   return (
     <span
       className={cn(
         "rounded-md px-2.5 py-1 text-[11.5px] font-bold",
-        "bg-met-bg text-met-text",
+        urgent && Number(label.replace("마감 D-", "")) <= 7
+          ? "bg-unmet-bg text-unmet-text"
+          : "text-ds-muted bg-[#F1F5F9]",
       )}
     >
-      {cost.kind === "free" ? "무료" : cost.label}
+      {label}
     </span>
   );
 }
-
-function IntakeBadge({ intake }: { intake: ProgramIntake }) {
-  if (intake.kind === "always") {
-    return (
-      <span className="text-ds-muted rounded-md bg-[#F1F5F9] px-2.5 py-1 text-[11.5px] font-bold">
-        상시 모집
-      </span>
-    );
-  }
-
-  if (intake.kind === "exam") {
-    return (
-      <span className="bg-ds-tint text-ds-navy rounded-md px-2.5 py-1 text-[11.5px] font-bold">
-        시험 {intake.date}
-      </span>
-    );
-  }
-
-  // 마감이 가까우면 눈에 띄게. 상태 색상이 아니라 마감 안내용이므로 배지와 구분한다.
-  const urgent = intake.daysLeft <= 7;
-  return (
-    <span
-      className={cn(
-        "rounded-md px-2.5 py-1 text-[11.5px] font-bold",
-        urgent ? "bg-unmet-bg text-unmet-text" : "text-ds-muted bg-[#F1F5F9]",
-      )}
-    >
-      모집 D-{intake.daysLeft}
-    </span>
-  );
-}
-
-export { isFree };

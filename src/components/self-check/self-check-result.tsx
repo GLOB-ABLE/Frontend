@@ -17,10 +17,7 @@ import { ArrowRight, Lock, Pencil } from "lucide-react";
 
 import Link from "next/link";
 
-import { DisclaimerFooter } from "@/components/ds/disclaimer-footer";
-import { GateBanner } from "@/components/ds/gate-banner";
 import { StatusBadge } from "@/components/ds/status-badge";
-import { EFFECTIVE_DATE, RULE_VERSION } from "@/lib/feed/mock";
 import { collectPendingProofs, evaluateGate } from "@/lib/self-check/gate";
 import {
   BEHAVIOR_LEVELS,
@@ -78,15 +75,6 @@ export function SelfCheckResult() {
             지금 쓸 수 있는 기능과 채워야 할 것을 정리했어요.
           </p>
         </header>
-
-        {/* ── 1. 게이트 상태 ── */}
-        <GateBanner
-          state={gate.state}
-          title={gate.title}
-          description={gate.description}
-          meta={`기준일 ${EFFECTIVE_DATE}`}
-          actionLabel="체류 정보 보기"
-        />
 
         {/* 판정 근거 — 판정만 있고 근거가 없는 화면은 만들지 않는다 */}
         <section className="border-ds-line bg-ds-surface mt-3 rounded-2xl border p-5">
@@ -331,12 +319,6 @@ export function SelfCheckResult() {
             </>
           )}
         </section>
-
-        <DisclaimerFooter
-          ruleVersion={RULE_VERSION}
-          effectiveDate={EFFECTIVE_DATE}
-          className="mt-3"
-        />
       </div>
     </div>
   );
