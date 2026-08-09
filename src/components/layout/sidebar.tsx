@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogIn, User, UserPlus, type LucideIcon } from "lucide-react";
+import { LogIn, User, type LucideIcon } from "lucide-react";
 
 import { LogoutButton } from "@/components/auth/logout-button";
 import { shellStrings as t } from "@/lib/i18n";
@@ -12,27 +12,32 @@ import { cn } from "@/lib/utils";
 const navLinkBase =
   "focus-visible:ring-point flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-sm whitespace-nowrap transition-colors outline-none focus-visible:ring-2";
 
-/** collapsed 상태에서 라벨 숨김 → 사이드바 hover 시 페이드 인 */
-const collapsedLabel =
-  "opacity-0 group-hover/sidebar:opacity-100 group-hover/sidebar:delay-75";
-
-function isActive(pathname: string, href: string) {
+function matches(pathname: string, href: string) {
+  // 홈은 정확히 "/"일 때만. startsWith로 보면 모든 경로가 홈에 걸린다.
+  if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** matchPaths가 있으면 함께 본다 — 역량 강화처럼 여러 화면을 묶는 메뉴 */
+function isActive(pathname: string, href: string, extra?: string[]) {
+  return (
+    matches(pathname, href) || (extra ?? []).some((p) => matches(pathname, p))
+  );
 }
 
 function NavLink({
   href,
   icon: Icon,
   label,
-  collapsed,
+  matchPaths,
 }: {
   href: string;
   icon: LucideIcon;
   label: string;
-  collapsed?: boolean;
+  matchPaths?: string[];
 }) {
   const pathname = usePathname();
-  const active = isActive(pathname, href);
+  const active = isActive(pathname, href, matchPaths);
   return (
     <Link
       href={href}
@@ -45,45 +50,28 @@ function NavLink({
       )}
     >
       <Icon className="size-[18px] shrink-0" />
-      <span
-        className={cn(
-          "transition-opacity duration-150",
-          collapsed && collapsedLabel,
-        )}
-      >
-        {label}
-      </span>
+      <span>{label}</span>
     </Link>
   );
 }
 
+/**
+ * 홈이 항상 대시보드가 되면서 아이콘 레일로 접을 이유가 없어졌다.
+ * 접힌 사이드바는 메뉴를 못 찾게 만든다 (docs/user-flow.md 5장).
+ */
 export function Sidebar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
-  const pathname = usePathname();
-  // 비로그인 홈(지도)에서만 아이콘 레일로 접는다 — hover 시 오버레이로 확장.
-  // 로그인 홈은 대시보드라 메뉴가 처음부터 보이는 편이 낫다.
-  const collapsed = pathname === "/" && !isLoggedIn;
   return (
-    <div
-      className={cn(
-        "relative z-40 hidden shrink-0 md:block",
-        collapsed ? "w-[68px]" : "w-[244px]",
-      )}
-    >
-      <nav
-        className={cn(
-          "border-border bg-card group/sidebar absolute inset-y-0 left-0 z-30 flex flex-col gap-1 overflow-x-hidden overflow-y-auto border-r p-3 transition-[width] duration-200 ease-out",
-          collapsed
-            ? "w-[68px] hover:w-[244px] hover:shadow-[8px_0_24px_rgba(31,58,138,0.12)]"
-            : "w-full",
-        )}
-      >
-        {nav.map(({ href, labelKey, icon }) => (
+    // 셸 높이가 고정돼 있어(h-dvh) 이 자리는 스크롤과 무관하게 제자리에 있다.
+    // 메뉴가 많아지면 사이드바 안에서만 스크롤된다.
+    <div className="relative z-40 hidden h-full w-[244px] shrink-0 md:block">
+      <nav className="border-border bg-card absolute inset-y-0 left-0 z-30 flex w-full flex-col gap-1 overflow-x-hidden overflow-y-auto border-r p-3">
+        {nav.map(({ href, labelKey, icon, matchPaths }) => (
           <NavLink
             key={href}
             href={href}
             icon={icon}
             label={t[labelKey]}
-            collapsed={collapsed}
+            matchPaths={matchPaths}
           />
         ))}
 
@@ -91,29 +79,11 @@ export function Sidebar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
         <div className="border-border mt-1 flex flex-col gap-1 border-t pt-2">
           {isLoggedIn ? (
             <>
-              <NavLink
-                href="/mypage"
-                icon={User}
-                label={t.navMypage}
-                collapsed={collapsed}
-              />
-              <LogoutButton
-                className={cn(
-                  "text-secondary-foreground hover:bg-muted w-full justify-start px-3 py-2.5 text-sm font-semibold",
-                  collapsed &&
-                    "[&_[data-label]]:opacity-0 [&_[data-label]]:transition-opacity group-hover/sidebar:[&_[data-label]]:opacity-100 group-hover/sidebar:[&_[data-label]]:delay-75",
-                )}
-              />
+              <NavLink href="/mypage" icon={User} label={t.navMypage} />
+              <LogoutButton className="text-secondary-foreground hover:bg-muted w-full justify-start px-3 py-2.5 text-sm font-semibold" />
             </>
           ) : (
-            <>
-              <NavLink
-                href="/login"
-                icon={LogIn}
-                label={t.navLogin}
-                collapsed={collapsed}
-              />
-            </>
+            <NavLink href="/login" icon={LogIn} label={t.navLogin} />
           )}
         </div>
       </nav>
