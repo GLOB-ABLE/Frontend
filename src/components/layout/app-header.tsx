@@ -19,7 +19,7 @@ export async function AppHeader({ hasUnread = true }: { hasUnread?: boolean }) {
     <header className="border-border text-foreground flex h-15 shrink-0 items-center justify-between border-b bg-white px-3.5 sm:px-5">
       {/* Logo + tagline */}
       <Link
-        href="/"
+        href="/home"
         className="focus-visible:ring-point flex items-center gap-2 rounded-md outline-none focus-visible:ring-2"
       >
         <span className="bg-point rounded-md p-1.5">

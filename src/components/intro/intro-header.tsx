@@ -71,7 +71,7 @@ export function IntroHeader() {
         */}
         <div className="ml-auto flex items-center gap-2">
           <Link
-            href="/"
+            href="/home"
             className="text-ds-muted hover:text-ds-primary hidden text-[13.5px] font-semibold transition-colors sm:block"
           >
             서비스 둘러보기

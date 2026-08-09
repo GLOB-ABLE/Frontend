@@ -37,7 +37,7 @@ export type NavItem = {
 
 /** 데스크톱 사이드바. 마이페이지는 아래 계정 영역에서 따로 보여준다. */
 export const nav: NavItem[] = [
-  { href: "/", labelKey: "navHome", icon: Home },
+  { href: "/home", labelKey: "navHome", icon: Home },
   // {
   //   href: "/self-check",
   //   labelKey: "navSelfCheck",

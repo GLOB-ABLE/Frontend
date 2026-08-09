@@ -49,7 +49,7 @@ export const GROWTH_ITEMS: GrowthItem[] = [
     description: "희망 직무에 필요한 실무 능력을 확인해요.",
     points: ["직무별 실무 과제", "결과를 공고 요건과 연결"],
     icon: Briefcase,
-    badge: "준비 중",
+    href: "/skilltest",
   },
 ];
 

@@ -8,8 +8,8 @@ import { bottomNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 function matches(pathname: string, href: string) {
-  // 홈은 정확히 "/"일 때만. startsWith로 보면 모든 경로가 홈에 걸린다.
-  if (href === "/") return pathname === "/";
+  // 홈은 정확히 "/home"일 때만. startsWith로 보면 모든 경로가 홈에 걸린다.
+  if (href === "/home") return pathname === "/home";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
