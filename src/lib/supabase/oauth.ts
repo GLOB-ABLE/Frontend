@@ -8,7 +8,10 @@ const SUPABASE_PROVIDER = {
   linkedin: "linkedin_oidc",
 } as const;
 
-export async function signInWithProvider(provider: OAuthProvider, next = "/") {
+export async function signInWithProvider(
+  provider: OAuthProvider,
+  next = "/home",
+) {
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithOAuth({
     provider: SUPABASE_PROVIDER[provider],
