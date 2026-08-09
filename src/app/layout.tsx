@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "I-OGO — 국제기구 커리어 네비게이터",
+  title: "Globable — 외국인 취업 플랫폼",
   description:
-    "외교부 공공데이터 기반, 국제기구 커리어를 준비하는 한국 학생을 위한 네비게이터",
+    "한국에서 일하려는 외국인 유학생과 외국인 인재를 채용하려는 기업을 잇는 취업 플랫폼",
 };
 
 export default function RootLayout({

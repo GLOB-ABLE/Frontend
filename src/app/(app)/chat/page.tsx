@@ -2,7 +2,7 @@ import { ChatClient } from "@/components/chat/chat-client";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
-  title: "챗봇 — I-OGO",
+  title: "챗봇 — Globable",
 };
 
 export default async function ChatPage() {

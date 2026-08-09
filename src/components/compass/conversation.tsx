@@ -553,7 +553,7 @@ function BotBubble({ text }: { text: string }) {
       <span className="bg-point-soft relative size-12 shrink-0 overflow-hidden rounded-full">
         <Image
           src="/mascot_default.png"
-          alt="I-OGO 나침반"
+          alt="Globable 나침반"
           fill
           sizes="36px"
           className="object-cover"

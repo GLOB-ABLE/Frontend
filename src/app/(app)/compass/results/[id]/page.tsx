@@ -1,7 +1,7 @@
 import { ResultDetail } from "@/components/compass/result-detail";
 
 export const metadata = {
-  title: "나침반 결과 — I-OGO",
+  title: "나침반 결과 — Globable",
 };
 
 export default async function CompassResultPage({
