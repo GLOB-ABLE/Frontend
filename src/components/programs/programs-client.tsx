@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 
 import { DisclaimerFooter } from "@/components/ds/disclaimer-footer";
 import { StatusBadge } from "@/components/ds/status-badge";
+import { GrowthBackLink } from "@/components/growth/growth-back-link";
 import { ProgramCard } from "@/components/programs/program-card";
 import { EFFECTIVE_DATE, RULE_VERSION } from "@/lib/feed/mock";
 import { LEARNER_NAME, NEEDS, PROGRAMS } from "@/lib/programs/mock";
@@ -44,6 +45,8 @@ export function ProgramsClient() {
   return (
     <div className="bg-ds-page min-h-full">
       <div className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8">
+        <GrowthBackLink className="mb-4" />
+
         <header className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-ds-navy text-2xl font-extrabold tracking-[-0.8px] sm:text-[26px]">

@@ -12,9 +12,8 @@ import { notFound } from "next/navigation";
 import { DisclaimerFooter } from "@/components/ds/disclaimer-footer";
 import { GateBanner } from "@/components/ds/gate-banner";
 import { DetailHeader } from "@/components/jobs/detail/detail-header";
-import { HighlightCards } from "@/components/jobs/detail/highlight-cards";
 import { PostingSource } from "@/components/jobs/detail/posting-source";
-import { RequirementTable } from "@/components/jobs/detail/requirement-table";
+import { RequirementDisclosure } from "@/components/jobs/detail/requirement-disclosure";
 import { SimilarJobs } from "@/components/jobs/detail/similar-jobs";
 import { SupportSidebar } from "@/components/jobs/detail/support-sidebar";
 import { VerdictSummary } from "@/components/jobs/detail/verdict-summary";
@@ -55,12 +54,14 @@ export function JobDetailClient({ id }: { id: string }) {
               readinessNotes={job.readinessNotes}
             />
 
+            {/* 기본은 접힘. 누르면 요건 표와 강점·채워야 할 것이 함께 열린다. */}
             {job.requirements.length > 0 && (
-              <RequirementTable requirements={job.requirements} gap={job.gap} />
-            )}
-
-            {(job.strengths.length > 0 || job.toFill.length > 0) && (
-              <HighlightCards strengths={job.strengths} toFill={job.toFill} />
+              <RequirementDisclosure
+                requirements={job.requirements}
+                gap={job.gap}
+                strengths={job.strengths}
+                toFill={job.toFill}
+              />
             )}
 
             <PostingSource source={job.source} />

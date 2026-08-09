@@ -249,11 +249,12 @@ function StrategyPanel({ strategy }: { strategy: HomeJobStrategy }) {
         </div>
       )}
 
+      {/* 개수는 위 요약 바가 이미 말한다. 여기서는 무엇을 여는지만 적는다. */}
       <Link
         href={`/jobs/${job.id}`}
         className="border-ds-line-strong text-ds-primary hover:bg-ds-tint mt-4 block rounded-[10px] border py-3 text-center text-[13.5px] font-bold transition-colors"
       >
-        요건 {total}개 전부 보기
+        요건 전부 보기
       </Link>
     </article>
   );
