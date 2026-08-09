@@ -48,9 +48,9 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // 로그인 상태에서 로그인/회원가입 페이지로 오면 마이페이지로 보낸다.
+  // 로그인 상태에서 로그인/회원가입 페이지로 오면 홈으로 보낸다.
   if (isAuthRoute) {
-    return redirectTo("/mypage");
+    return redirectTo("/home");
   }
 
   return supabaseResponse;
