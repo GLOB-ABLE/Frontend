@@ -58,6 +58,7 @@ export function RequirementSidebar({
   const total = totalRequirements(gap);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -169,7 +170,9 @@ export function RequirementSidebar({
         </p>
       </section>
 
-      {mounted && typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null}
+      {mounted && typeof document !== "undefined"
+        ? createPortal(modalContent, document.body)
+        : null}
     </>
   );
 }

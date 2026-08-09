@@ -17,9 +17,7 @@ import { ArrowRight, Lock, Pencil } from "lucide-react";
 
 import Link from "next/link";
 
-
 import { StatusBadge } from "@/components/ds/status-badge";
-import { EFFECTIVE_DATE, RULE_VERSION } from "@/lib/feed/mock";
 import { collectPendingProofs, evaluateGate } from "@/lib/self-check/gate";
 import {
   BEHAVIOR_LEVELS,

@@ -25,27 +25,13 @@ import {
   getHomeJobStrategies,
   getHomePrograms,
   HOME_USER,
-  openRequirementCount,
 } from "@/lib/home/select";
 
 import Image from "next/image";
 
-/** 인사 아래 한 줄 — 남은 것을 개수로만 말한다 */
-function summaryLine(open: { check: number; unmet: number }): string {
-  const parts: string[] = [];
-  if (open.check > 0) parts.push(`확인 필요 ${open.check}개`);
-  if (open.unmet > 0) parts.push(`미충족 ${open.unmet}개`);
-
-  if (parts.length === 0) {
-    return "고른 공고에 남은 요건이 없어요. 바로 지원할 수 있습니다.";
-  }
-  return `고른 공고 3건에 ${parts.join(" · ")}가 남았어요. 하나씩 채워 볼까요?`;
-}
-
 export function StudentHome() {
   const strategies = getHomeJobStrategies();
   const programs = getHomePrograms();
-  const open = openRequirementCount(strategies);
 
   // 지원한 공고 갯수는 현재 목데이터가 없으므로 임시로 0으로 설정합니다.
   const appliedJobsCount = 0;

@@ -15,16 +15,11 @@
 import { X } from "lucide-react";
 
 import { useMemo, useState } from "react";
-
-
-import { RequirementLegend } from "@/components/ds/requirement-bar";
 import { FeedFiltersPanel } from "@/components/jobs/feed-filters";
 import { JobFeedCard } from "@/components/jobs/job-feed-card";
 import { MyConditionCard } from "@/components/jobs/my-condition-card";
 import {
-  EFFECTIVE_DATE,
   JOB_POSTINGS,
-  RULE_VERSION,
   SALARY_RANGE,
   TOTAL_POSTING_COUNT,
 } from "@/lib/feed/mock";
@@ -86,10 +81,9 @@ export function JobsClient() {
 
   return (
     <div className="bg-ds-page min-h-full">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col lg:flex-row gap-6 lg:gap-8 px-4 py-5 sm:px-6 lg:px-8">
-        
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-5 sm:px-6 lg:flex-row lg:gap-8 lg:px-8">
         {/* 왼쪽 조건 사이드바 (스크롤 따라 움직이게 둠) */}
-        <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0">
+        <aside className="w-full shrink-0 lg:w-[320px] xl:w-[360px]">
           <div className="flex flex-col gap-4">
             {/* 지금 어떤 조건으로 걸러졌는지 먼저 보여준다 */}
             <MyConditionCard
@@ -119,7 +113,7 @@ export function JobsClient() {
         </aside>
 
         {/* 오른쪽 공고 목록 */}
-        <main className="flex-1 min-w-0">
+        <main className="min-w-0 flex-1">
           <header className="mb-3.5 flex flex-wrap items-end justify-between gap-3">
             <h1 className="text-ds-navy text-xl font-extrabold tracking-[-0.5px] sm:text-[21px]">
               조건에 맞는 공고 {TOTAL_POSTING_COUNT}건

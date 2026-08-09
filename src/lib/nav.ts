@@ -14,7 +14,6 @@
 
 import {
   Briefcase,
-  ClipboardCheck,
   GraduationCap,
   Home,
   User,
