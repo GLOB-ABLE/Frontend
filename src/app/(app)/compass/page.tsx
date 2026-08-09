@@ -1,7 +1,7 @@
 import { CompassFlow } from "@/components/compass/compass-flow";
 
 export const metadata = {
-  title: "나침반 · 나에게 맞는 국제기구 — I-OGO",
+  title: "나침반 · 나에게 맞는 국제기구 — Globable",
 };
 
 export default function CompassPage() {

@@ -59,8 +59,9 @@ function NavLink({
 
 export function Sidebar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const pathname = usePathname();
-  // 홈에서는 아이콘 레일만 노출해 지도를 와이드하게 — hover 시 오버레이로 확장
-  const collapsed = pathname === "/";
+  // 비로그인 홈(지도)에서만 아이콘 레일로 접는다 — hover 시 오버레이로 확장.
+  // 로그인 홈은 대시보드라 메뉴가 처음부터 보이는 편이 낫다.
+  const collapsed = pathname === "/" && !isLoggedIn;
   return (
     <div
       className={cn(

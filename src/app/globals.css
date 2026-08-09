@@ -37,6 +37,56 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
+  /* ── Design System v1.2 — 상태 표현 규칙 ── */
+  /* 기본 팔레트 */
+  --color-ds-navy: var(--ds-navy);
+  --color-ds-primary: var(--ds-primary);
+  --color-ds-sub: var(--ds-sub);
+  --color-ds-surface: var(--ds-surface);
+  --color-ds-page: var(--ds-page);
+  --color-ds-tint: var(--ds-tint);
+
+  /* 텍스트 */
+  --color-ds-ink: var(--ds-ink);
+  --color-ds-body: var(--ds-body);
+  --color-ds-muted: var(--ds-muted);
+  --color-ds-label: var(--ds-label);
+
+  /* 라인 */
+  --color-ds-line: var(--ds-line);
+  --color-ds-divider: var(--ds-divider);
+  --color-ds-line-strong: var(--ds-line-strong);
+
+  /* 상태 — 충족 / 미충족 / 확인 필요 / 해당 없음 */
+  --color-met: var(--met);
+  --color-met-bg: var(--met-bg);
+  --color-met-border: var(--met-border);
+  --color-met-text: var(--met-text);
+  --color-met-surface: var(--met-surface);
+
+  --color-unmet: var(--unmet);
+  --color-unmet-bg: var(--unmet-bg);
+  --color-unmet-border: var(--unmet-border);
+  --color-unmet-text: var(--unmet-text);
+  --color-unmet-surface: var(--unmet-surface);
+
+  --color-check: var(--check);
+  --color-check-bg: var(--check-bg);
+  --color-check-border: var(--check-border);
+  --color-check-text: var(--check-text);
+  --color-check-surface: var(--check-surface);
+
+  --color-na: var(--na);
+  --color-na-bg: var(--na-bg);
+  --color-na-border: var(--na-border);
+  --color-na-text: var(--na-text);
+  --color-na-surface: var(--na-surface);
+
+  /* 책임 주체 */
+  --color-owner-student: var(--owner-student);
+  --color-owner-company: var(--owner-company);
+  --color-owner-expert: var(--owner-expert);
+
   --radius-sm: 0.5rem;
   --radius-md: 0.625rem;
   --radius-lg: 0.75rem;
@@ -76,6 +126,53 @@
 
   --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* ── Design System v1.2 ── */
+  --ds-navy: #1f3a8f;
+  --ds-primary: #1f77ff;
+  --ds-sub: #4b8bef;
+  --ds-surface: #ffffff;
+  --ds-page: #f4f9ff;
+  --ds-tint: #d7edfb;
+
+  --ds-ink: #0f1f3d;
+  --ds-body: #40507a;
+  --ds-muted: #6b7a99;
+  --ds-label: #9aaac4;
+
+  --ds-line: #e2ecf9;
+  --ds-divider: #edf3fb;
+  --ds-line-strong: #c9dff8;
+
+  /* 상태 색상 — 4상태 배지에만 사용 */
+  --met: #12a150;
+  --met-bg: #e6f6ed;
+  --met-border: #d9eee2;
+  --met-text: #0e8a45;
+  --met-surface: #f5fbf7;
+
+  --unmet: #d9412b;
+  --unmet-bg: #fff1f0;
+  --unmet-border: #f7d5d0;
+  --unmet-text: #b7331f;
+  --unmet-surface: #fff7f6;
+
+  --check: #e9a700;
+  --check-bg: #fff6e0;
+  --check-border: #f3dfae;
+  --check-text: #a16a00;
+  --check-surface: #fffbf0;
+
+  --na: #94a3b8;
+  --na-bg: #eef1f5;
+  --na-border: #e7ebf1;
+  --na-text: #64748b;
+  --na-surface: #fbfcfe;
+
+  /* 책임 주체 */
+  --owner-student: #1f77ff;
+  --owner-company: #137a70;
+  --owner-expert: #6d3fd6;
 }
 
 @layer base {

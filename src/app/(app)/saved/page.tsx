@@ -2,7 +2,7 @@ import { SavedClient } from "@/components/saved/saved-client";
 import type { BookmarkKind } from "@/lib/bookmarks";
 
 export const metadata = {
-  title: "저장됨 — I-OGO",
+  title: "저장됨 — Globable",
 };
 
 export default async function SavedPage({

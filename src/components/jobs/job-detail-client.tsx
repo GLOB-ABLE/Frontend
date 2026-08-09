@@ -1,159 +1,84 @@
-"use client";
+/**
+ * 공고 상세 — PRD MVP-03 (공고 해석 · 4상태 갭 분석) / MVP-04 (장애요인)
+ *
+ * 화면 규칙은 docs/design-system.md를 따른다.
+ * - 확률·매칭률·순위·별점을 쓰지 않는다 (금지 패턴 1·5)
+ * - 모든 판정에 근거를 붙인다
+ * - 게이트 배너와 면책 푸터를 항상 넣는다
+ */
 
-import { ArrowUpRight, ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
 
-import { BookmarkButton } from "@/components/bookmarks/bookmark-button";
-import { JobDetailSkeleton } from "@/components/jobs/job-detail-skeleton";
-import {
-  getOpportunity,
-  logClick,
-  normalizeOpportunitySourceUrl,
-  type Opportunity,
-} from "@/lib/api/iogo";
-import { getUserId } from "@/lib/api/user";
-import { ddayChip, fitBadge, orgAbbrev } from "@/lib/opportunity";
-import { cn } from "@/lib/utils";
-
-type LoadState = "loading" | "ok" | "error";
+import { DisclaimerFooter } from "@/components/ds/disclaimer-footer";
+import { GateBanner } from "@/components/ds/gate-banner";
+import { DetailHeader } from "@/components/jobs/detail/detail-header";
+import { HighlightCards } from "@/components/jobs/detail/highlight-cards";
+import { PostingSource } from "@/components/jobs/detail/posting-source";
+import { RequirementTable } from "@/components/jobs/detail/requirement-table";
+import { SimilarJobs } from "@/components/jobs/detail/similar-jobs";
+import { SupportSidebar } from "@/components/jobs/detail/support-sidebar";
+import { VerdictSummary } from "@/components/jobs/detail/verdict-summary";
+import { getJobDetail } from "@/lib/feed/detail-mock";
+import { EFFECTIVE_DATE, GATE, RULE_VERSION } from "@/lib/feed/mock";
 
 export function JobDetailClient({ id }: { id: string }) {
-  const [state, setState] = useState<LoadState>("loading");
-  const [error, setError] = useState<string | null>(null);
-  const [job, setJob] = useState<Opportunity | null>(null);
+  const job = getJobDetail(id);
+  if (!job) notFound();
 
-  useEffect(() => {
-    const ctrl = new AbortController();
-    getOpportunity(id, { signal: ctrl.signal })
-      .then((data) => {
-        setJob(data);
-        setState("ok");
-        // 공고 상세 조회 = 해당 기구 관심 신호로 기록 (개인화 입력).
-        if (data?.organization) {
-          void getUserId()
-            .then((uid) => logClick(uid, data.organization))
-            .catch(() => {});
-        }
-      })
-      .catch((e: unknown) => {
-        if (ctrl.signal.aborted) return;
-        setError(e instanceof Error ? e.message : String(e));
-        setState("error");
-      });
-    return () => ctrl.abort();
-  }, [id]);
-
-  const fit = job?.score != null ? fitBadge(job.score) : null;
-  const dday = ddayChip(job?.deadline);
-  const applyUrl = job ? normalizeOpportunitySourceUrl(job.source_url) : "";
+  /** 이 공고에서 아직 확인되지 않은 항목 수 — 게이트 배너 문구에 쓴다 */
+  const openCount = job.gap.check + job.gap.unmet;
 
   return (
-    <div className="mx-auto w-full max-w-[760px] px-6 py-7">
-      <Link
-        href="/jobs"
-        className="text-muted-foreground hover:text-foreground mb-5 inline-flex items-center gap-1 text-sm font-semibold transition-colors"
-      >
-        <ChevronLeft className="size-4" />
-        공고 목록
-      </Link>
+    <div className="bg-ds-page min-h-full">
+      <DetailHeader job={job} effectiveDate={EFFECTIVE_DATE} />
 
-      {state === "loading" && <JobDetailSkeleton />}
+      <div className="mx-auto w-full max-w-[1440px] px-4 py-5 sm:px-6 lg:px-8">
+        {/* E · 게이트 상태 배너 */}
+        <GateBanner
+          state={openCount > 0 ? "VG-B" : "VG-A"}
+          title={
+            openCount > 0
+              ? `이 공고에서 확인이 필요한 항목이 ${openCount}개 있습니다`
+              : "이 공고의 모든 요건이 확인됐습니다"
+          }
+          description={`지원은 지금도 할 수 있어요. ${GATE.state} · 만료 ${GATE.expiresAt}`}
+          actionLabel={
+            openCount > 0 ? `${openCount}개 확인하기` : "지원 준비하기"
+          }
+        />
 
-      {state === "error" && (
-        <div className="text-muted-foreground py-12 text-center">
-          <p className="text-foreground text-[15px] font-bold">
-            공고를 불러오지 못했어요
-          </p>
-          <p className="mt-1.5 text-sm">{error}</p>
-        </div>
-      )}
+        <div className="mt-5 grid items-start gap-5 lg:grid-cols-[1fr_320px]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <VerdictSummary
+              gap={job.gap}
+              recommendReasons={job.recommendReasons}
+              readinessNotes={job.readinessNotes}
+            />
 
-      {state === "ok" && job && (
-        <article className="bg-card border-border rounded-2xl border p-6">
-          {/* org + bookmark */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="bg-primary flex size-12 shrink-0 items-center justify-center rounded-xl text-xs font-extrabold text-white">
-                {orgAbbrev(job.organization)}
-              </div>
-              <div className="min-w-0">
-                <div className="text-muted-foreground text-sm font-bold">
-                  {job.organization}
-                </div>
-                {job.location && (
-                  <div className="text-xs text-slate-400">{job.location}</div>
-                )}
-              </div>
-            </div>
-            <BookmarkButton
-              item={{ id: job.id, kind: "job", data: job }}
-              iconClassName="size-6"
+            {job.requirements.length > 0 && (
+              <RequirementTable requirements={job.requirements} gap={job.gap} />
+            )}
+
+            {(job.strengths.length > 0 || job.toFill.length > 0) && (
+              <HighlightCards strengths={job.strengths} toFill={job.toFill} />
+            )}
+
+            <PostingSource source={job.source} />
+
+            <SimilarJobs jobs={job.similar} />
+
+            {/* F · 면책·출처 푸터 */}
+            <DisclaimerFooter
+              ruleVersion={RULE_VERSION}
+              effectiveDate={EFFECTIVE_DATE}
             />
           </div>
 
-          {/* title */}
-          <h1 className="text-foreground mt-4 text-xl leading-snug font-extrabold tracking-tight">
-            {job.title}
-          </h1>
-
-          {/* tags */}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {job.type && (
-              <span className="bg-point-soft text-point-hover rounded-md px-2.5 py-1 text-[11px] font-bold">
-                {job.type}
-              </span>
-            )}
-            {fit && (
-              <span
-                className={cn(
-                  "rounded-lg px-2.5 py-1 text-xs font-extrabold tabular-nums",
-                  fit.cls,
-                )}
-              >
-                {fit.pct}% 적합
-              </span>
-            )}
-            {dday && (
-              <span
-                className={cn(
-                  "rounded-lg px-2.5 py-1 text-xs font-bold tabular-nums",
-                  dday.cls,
-                )}
-              >
-                {dday.label}
-              </span>
-            )}
+          <div className="lg:sticky lg:top-5">
+            <SupportSidebar sites={job.supportSites} />
           </div>
-
-          {/* deadline line */}
-          {job.deadline && (
-            <p className="text-muted-foreground mt-4 font-mono text-xs">
-              마감 · {job.deadline}
-            </p>
-          )}
-
-          {/* description */}
-          {job.description && (
-            <div className="border-border mt-5 border-t pt-5">
-              <p className="text-[14px] leading-relaxed whitespace-pre-wrap text-slate-600">
-                {job.description}
-              </p>
-            </div>
-          )}
-
-          {/* apply */}
-          <a
-            href={applyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary hover:bg-primary/85 mt-6 inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-3 text-sm font-bold text-white transition-colors"
-          >
-            지원하러 가기
-            <ArrowUpRight className="size-4" />
-          </a>
-        </article>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
