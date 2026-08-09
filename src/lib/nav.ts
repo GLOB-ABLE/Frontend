@@ -16,13 +16,17 @@ export type NavItem = {
 
 export const nav: NavItem[] = [
   { href: "/chat", labelKey: "navChat", icon: MessageCircle },
-  { href: "/compass", labelKey: "navCompass", icon: Compass },
+  // 나침반 → 내 조건 진단으로 교체 (docs/내-조건-진단-문항.md).
+  // 기존 /compass 화면은 지우지 않았으므로 주소로 직접 열 수 있다.
+  { href: "/self-check", labelKey: "navCompass", icon: Compass },
   { href: "/jobs", labelKey: "navOpportunities", icon: Briefcase },
   { href: "/insight", labelKey: "navInsight", icon: Newspaper },
 ];
 
 export const bottomNav: NavItem[] = [
-  { href: "/compass", labelKey: "navCompass", icon: Compass },
+  // 나침반 → 내 조건 진단으로 교체 (docs/내-조건-진단-문항.md).
+  // 기존 /compass 화면은 지우지 않았으므로 주소로 직접 열 수 있다.
+  { href: "/self-check", labelKey: "navCompass", icon: Compass },
   { href: "/jobs", labelKey: "navOpportunities", icon: Briefcase },
   { href: "/insight", labelKey: "navInsight", icon: Newspaper },
   { href: "/chat", labelKey: "navChat", icon: MessageCircle },
